@@ -6,9 +6,9 @@ import store from "./store";
 
 export const useOrders = () => {
     const dispatch = useDispatch();
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(addOrderDetails(data))
-    },[])
-    
+    }, [])
+
     return data;
 }

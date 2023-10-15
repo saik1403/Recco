@@ -21,17 +21,17 @@ const Header = () => {
                 </div>
                 <div className="flex flex-row mt-5">
                     <div className="text-white mr-7">
-                    <ion-icon name="cart" size="large"></ion-icon>
+                        <ion-icon name="cart" size="large"></ion-icon>
                     </div>
                     <div className="flex flex-row">
-                    <h1 className="text-white text-lg mr-1">
-                        Hello,James
-                    </h1>
-                    <div className="text-white mt-1">
-                    <ion-icon name="arrow-dropdown" ></ion-icon>
+                        <h1 className="text-white text-lg mr-1">
+                            Hello,James
+                        </h1>
+                        <div className="text-white mt-1">
+                            <ion-icon name="arrow-dropdown" ></ion-icon>
+                        </div>
                     </div>
-                    </div>
-                    
+
                 </div>
             </div>
 

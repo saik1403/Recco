@@ -1,21 +1,39 @@
 import { useEffect, useState } from "react";
 import { useOrders } from "../../util/useOrders";
-import { useDispatch,useSelector } from "react-redux";
-import { updateStatus,addOrderDetails } from "../../util/orderSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { updateStatus, addOrderDetails } from "../../util/orderSlice";
 import Button from "../../components/Button";
 import Avocado from "../../../Assets/Images/Avocado.jpg"
 import store from "../../util/store";
 import data from "../../../mock/data";
+import Modal from "../../components/Modal";
 
 const OrderConfiramationPage = () => {
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [index,setIndex] = useState();
+    const openModal = (index) => {
+        setIndex(index)
+        setModalOpen(true);
+    };
+    const closeModal = () => {
+        setModalOpen(false);
+    };
+
     const dispatch = useDispatch();
     useOrders();
     const orderDetails = useSelector(store => store.order.orderDetails)
     const orderId = orderDetails.orderId;
     const supplierDetails = orderDetails.supplierDetails;
     const productLabels = orderDetails.productLabels;
-    const productList= orderDetails.productList;
-
+    const productList = orderDetails.productList;
+    const noPressed = () =>{
+        dispatch(updateStatus({ id: index, data: "Missing" }));
+        setModalOpen(false);
+    }
+    const yesPressed = () =>{
+        dispatch(updateStatus({ id: index, data: "Missing Urgent" }));
+        setModalOpen(false);
+    }
     const renderIcons = () => {
     }
     const renderSuppplierDetails = () => {
@@ -73,7 +91,19 @@ const OrderConfiramationPage = () => {
                 return <div className=""></div>;
         }
     }
-    const renderStatus = (status,index) => {
+    const showModal = () => {
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <div className="bg-white p-16">
+                <div className="flex flex-row">
+                    <div className="text-lg font-bold">Missing product</div>
+                    <div>
+                        <ion-icon name="close" size="large"></ion-icon>
+                    </div>
+                </div>
+            </div>
+        </Modal>
+    }
+    const renderStatus = (status, index) => {
         return (
             <>
                 <div className="w-[50%]">
@@ -82,10 +112,10 @@ const OrderConfiramationPage = () => {
                     }
                 </div>
                 <div className="flex flex-row mx-1">
-                    <div className={`${status.includes("Approved") ? "text-green-600" : ""}`} onClick={()=>{dispatch(updateStatus({id: index,data: "Approved"}))}}>
+                    <div className={`${status.includes("Approved") ? "text-green-600" : ""}`} onClick={() => { dispatch(updateStatus({ id: index, data: "Approved" })) }}>
                         <ion-icon name="checkmark" size="large"></ion-icon>
                     </div>
-                    <div className={`${status.includes("Missing") ? "text-red-600" : ""}`} onClick={()=>{dispatch(updateStatus({id: index,data: "Missing"}))}}>
+                    <div className={`${status.includes("Missing") ? "text-red-600" : ""}`} onClick={() => {openModal(index)}}>
                         <ion-icon name="close" size="large"></ion-icon>
                     </div>
                     <p>edit</p>
@@ -120,7 +150,7 @@ const OrderConfiramationPage = () => {
                         </p>
                         <div className="ml-12 flex flex-row">
                             {
-                                renderStatus(item.status,index)
+                                renderStatus(item.status, index)
                             }
                         </div>
                     </div>
@@ -129,7 +159,7 @@ const OrderConfiramationPage = () => {
         );
     }
     return (
-        <div className="h-screen w-screen bg-[#fbfbfb]">
+        <div className="h-screen w-screen bg-[#fbfbfb] z-0">
             <div className="bg-white shadow-2xl py-2 pb-4">
                 <div className="flex flex-row px-24 ">
                     <p className="text-sm text-slate-500 mr-1">Orders</p>
@@ -189,6 +219,24 @@ const OrderConfiramationPage = () => {
                     }
                 </div>
             </div>
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <div className="bg-white p-8 border shadow-xl rounded-xl">
+                    <div className="w-full flex flex-row justify-between">
+                        <div className="text-lg font-bold">Missing product</div>
+                        <div onClick={()=>{closeModal( )}}>
+                            <ion-icon name="close" size="large"></ion-icon>
+                        </div>
+                    </div>
+                    <div className="mt-1 text-slate-600 text-sm">
+
+                        "is chiken Brest fillets,Boneless..", Urgent ?
+                    </div>
+                    <div className="flex flex-row justify-end mt-1">
+                        <div className="text-lg mr-3 font-medium cursor-pointer" onClick={()=>{noPressed()}}>No</div>
+                        <div className="text-lg font-medium cursor-pointer" onClick={()=>{yesPressed()}}>Yes</div>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };
