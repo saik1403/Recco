@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useOrders } from "../../util/useOrders";
 import { useDispatch, useSelector } from "react-redux";
-import { updateStatus, addOrderDetails } from "../../util/orderSlice";
+import { updateStatus } from "../../util/orderSlice";
 import Button from "../../components/Button";
 import Avocado from "../../../Assets/Images/Avocado.jpg"
-import store from "../../util/store";
-import data from "../../../mock/data";
 import Modal from "../../components/Modal";
 
 const OrderConfiramationPage = () => {
     const [isModalOpen, setModalOpen] = useState(false);
-    const [index,setIndex] = useState();
+    const [index, setIndex] = useState();
     const openModal = (index) => {
         setIndex(index)
         setModalOpen(true);
@@ -26,11 +24,11 @@ const OrderConfiramationPage = () => {
     const supplierDetails = orderDetails.supplierDetails;
     const productLabels = orderDetails.productLabels;
     const productList = orderDetails.productList;
-    const noPressed = () =>{
+    const noPressed = () => {
         dispatch(updateStatus({ id: index, data: "Missing" }));
         setModalOpen(false);
     }
-    const yesPressed = () =>{
+    const yesPressed = () => {
         dispatch(updateStatus({ id: index, data: "Missing Urgent" }));
         setModalOpen(false);
     }
@@ -41,7 +39,7 @@ const OrderConfiramationPage = () => {
             supplierDetails.map((item, index) => {
                 return (
                     <div className="flex flex-row flex-grow" key={index}>
-                        {index > 0 ? <div className="border first:bordr-0 h-full border-slate-300 mr-4 rounded-xl">
+                        {index > 0 ? <div className="border h-full border-slate-300 mr-4 rounded-xl">
                         </div> : null}
                         <div className="mr-3">
                             <p className="text-sm text-slate-500">
@@ -91,18 +89,6 @@ const OrderConfiramationPage = () => {
                 return <div className=""></div>;
         }
     }
-    const showModal = () => {
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-            <div className="bg-white p-16">
-                <div className="flex flex-row">
-                    <div className="text-lg font-bold">Missing product</div>
-                    <div>
-                        <ion-icon name="close" size="large"></ion-icon>
-                    </div>
-                </div>
-            </div>
-        </Modal>
-    }
     const renderStatus = (status, index) => {
         return (
             <>
@@ -115,7 +101,7 @@ const OrderConfiramationPage = () => {
                     <div className={`${status.includes("Approved") ? "text-green-600" : ""}`} onClick={() => { dispatch(updateStatus({ id: index, data: "Approved" })) }}>
                         <ion-icon name="checkmark" size="large"></ion-icon>
                     </div>
-                    <div className={`${status.includes("Missing") ? "text-red-600" : ""}`} onClick={() => {openModal(index)}}>
+                    <div className={`${status.includes("Missing") ? "text-red-600" : ""}`} onClick={() => { openModal(index) }}>
                         <ion-icon name="close" size="large"></ion-icon>
                     </div>
                     <p>edit</p>
@@ -127,6 +113,9 @@ const OrderConfiramationPage = () => {
         return (
             productList.map((item, index) => {
                 return (
+                    <>
+                    {index > 0 ? <div className="border w-full border-slate-300 rounded-xl mt-2">
+                        </div> : null}
                     <div className="flex flex-row mt-6" key={index}>
                         <div className="ml-6 h-16 w-16">
                             <img src={Avocado} />
@@ -148,18 +137,19 @@ const OrderConfiramationPage = () => {
                         <p className="mx-4 ml-14 text-sm font-medium text-slate-500">
                             {item.total}
                         </p>
-                        <div className="ml-12 flex flex-row">
+                        <div className="ml-12 flex flex-row ">
                             {
                                 renderStatus(item.status, index)
                             }
                         </div>
                     </div>
+                    </>
                 );
             })
         );
     }
     return (
-        <div className="h-screen w-screen bg-[#fbfbfb] z-0">
+        <div className="h-screen w-screen bg-[#fbfbfb] z-0 mb-20">
             <div className="bg-white shadow-2xl py-2 pb-4">
                 <div className="flex flex-row px-24 ">
                     <p className="text-sm text-slate-500 mr-1">Orders</p>
@@ -223,7 +213,7 @@ const OrderConfiramationPage = () => {
                 <div className="bg-white p-8 border shadow-xl rounded-xl">
                     <div className="w-full flex flex-row justify-between">
                         <div className="text-lg font-bold">Missing product</div>
-                        <div onClick={()=>{closeModal( )}}>
+                        <div onClick={() => { closeModal() }}>
                             <ion-icon name="close" size="large"></ion-icon>
                         </div>
                     </div>
@@ -232,8 +222,8 @@ const OrderConfiramationPage = () => {
                         "is chiken Brest fillets,Boneless..", Urgent ?
                     </div>
                     <div className="flex flex-row justify-end mt-1">
-                        <div className="text-lg mr-3 font-medium cursor-pointer" onClick={()=>{noPressed()}}>No</div>
-                        <div className="text-lg font-medium cursor-pointer" onClick={()=>{yesPressed()}}>Yes</div>
+                        <div className="text-lg mr-3 font-medium cursor-pointer" onClick={() => { noPressed() }}>No</div>
+                        <div className="text-lg font-medium cursor-pointer" onClick={() => { yesPressed() }}>Yes</div>
                     </div>
                 </div>
             </Modal>
